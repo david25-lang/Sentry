@@ -44,6 +44,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { API_BASE_URL } from "@/lib/api";
 import { useSentryStore } from "@/lib/store";
 
 export function Settings() {
@@ -313,9 +314,7 @@ export function Settings() {
                 <div className={`w-3 h-3 rounded-full ${health?.status === "healthy" ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
                 <div>
                   <p className="font-medium">API Connection</p>
-                  <p className="text-sm text-muted-foreground">
-                    {process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{API_BASE_URL}</p>
                 </div>
               </div>
               <Badge variant={health?.status === "healthy" ? "default" : "destructive"}>

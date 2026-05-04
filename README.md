@@ -18,17 +18,17 @@ Sentry is a Next.js frontend for road-damage analysis with:
 ## Prerequisites
 
 - Node.js 20+
-- A running backend API (default: `http://localhost:8000`)
+- A running backend API (default: `https://sentry-backend-cucr.onrender.com`)
 
 ## Environment
 
 Create `.env.local` in the project root:
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=https://sentry-backend-cucr.onrender.com
 ```
 
-If `NEXT_PUBLIC_API_URL` is not set, the app falls back to `http://localhost:8000`.
+If `NEXT_PUBLIC_API_URL` is not set, the app falls back to `https://sentry-backend-cucr.onrender.com`.
 
 ## Run Locally
 

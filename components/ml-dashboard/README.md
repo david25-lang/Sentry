@@ -247,8 +247,8 @@ export function DashboardWithAPI() {
     const fetchData = async () => {
       try {
         const [metricsRes, trainingRes] = await Promise.all([
-          fetch('http://localhost:8000/api/metrics'),
-          fetch('http://localhost:8000/api/training'),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/metrics`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/training`),
         ]);
 
         if (!metricsRes.ok || !trainingRes.ok) throw new Error('API Error');
