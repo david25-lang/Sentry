@@ -85,7 +85,6 @@ export const useSentryStore = create<SentryState>()(
       detectionHistory: [],
       
       settings: {
-        confidenceThreshold: 0.25,
         showBoundingBoxes: true,
         potholeOnly: false,
         autoSaveResults: true,
@@ -169,7 +168,7 @@ export const useSentryStore = create<SentryState>()(
         const { settings } = get();
         try {
           set({ isLoading: true, error: null, currentImageUrl: url });
-          const result = await api.detectFromURL(url, settings.confidenceThreshold, settings.potholeOnly);
+          const result = await api.detectFromURL(url, settings.potholeOnly);
           set((state) => ({ 
             lastDetectionResult: result, 
             isLoading: false,
@@ -190,7 +189,7 @@ export const useSentryStore = create<SentryState>()(
           const previewUrl = URL.createObjectURL(file);
           set({ currentImageUrl: previewUrl });
           
-          const result = await api.detectFromUpload(file, settings.confidenceThreshold, settings.potholeOnly);
+          const result = await api.detectFromUpload(file, settings.potholeOnly);
           set((state) => ({ 
             lastDetectionResult: result, 
             isLoading: false,
@@ -245,7 +244,7 @@ export const useSentryStore = create<SentryState>()(
         const { settings } = get();
         try {
           set({ isLoading: true, error: null, currentImageUrl: url });
-          const result = await api.compareFromURL(url, settings.confidenceThreshold, settings.potholeOnly);
+          const result = await api.compareFromURL(url, settings.potholeOnly);
           set((state) => ({
             lastComparisonResult: result,
             lastDetectionResult: result.yolo_result,
@@ -268,7 +267,7 @@ export const useSentryStore = create<SentryState>()(
           const previewUrl = URL.createObjectURL(file);
           set({ currentImageUrl: previewUrl });
 
-          const result = await api.compareFromUpload(file, settings.confidenceThreshold, settings.potholeOnly);
+          const result = await api.compareFromUpload(file, settings.potholeOnly);
           set((state) => ({
             lastComparisonResult: result,
             lastDetectionResult: result.yolo_result,

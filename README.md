@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sentry Frontend
 
-## Getting Started
+Sentry is a Next.js frontend for road-damage analysis with:
 
-First, run the development server:
+- YOLO detection (bounding boxes)
+- CNN classification (single-label prediction)
+- Side-by-side model comparison
+- Local settings and history management
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Zustand state management
+
+## Prerequisites
+
+- Node.js 20+
+- A running backend API (default: `http://localhost:8000`)
+
+## Environment
+
+Create `.env.local` in the project root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+If `NEXT_PUBLIC_API_URL` is not set, the app falls back to `http://localhost:8000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+## Quality Checks
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run lint
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Expected Backend Endpoints
 
-## Deploy on Vercel
+- `GET /health`
+- `GET /api/v1/models`
+- `GET /api/v1/classes`
+- `POST /api/v1/detect/url`
+- `POST /api/v1/detect/upload`
+- `POST /api/v1/classify/url`
+- `POST /api/v1/classify/upload`
+- `POST /api/v1/compare/url` (optional, app includes fallback)
+- `POST /api/v1/compare/upload` (optional, app includes fallback)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Detection and classification image previews currently use native `<img>` tags in several places. This is safe, but lint warns that `next/image` can improve optimization.
+- Build should pass with the current setup.

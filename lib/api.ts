@@ -68,12 +68,10 @@ export async function getHealth(): Promise<HealthResponse> {
 
 export async function detectFromURL(
   url: string,
-  confidenceThreshold: number = 0.25,
   potholeOnly: boolean = false
 ): Promise<ImageAnalysisResult> {
   const request: URLRequest = {
     url,
-    confidence_threshold: confidenceThreshold,
     pothole_only: potholeOnly,
   };
 
@@ -85,13 +83,12 @@ export async function detectFromURL(
 
 export async function detectFromUpload(
   file: File,
-  confidenceThreshold: number = 0.25,
   potholeOnly: boolean = false
 ): Promise<ImageAnalysisResult> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const url = `${API_BASE_URL}/api/v1/detect/upload?confidence_threshold=${confidenceThreshold}&pothole_only=${potholeOnly}`;
+  const url = `${API_BASE_URL}/api/v1/detect/upload?pothole_only=${potholeOnly}`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -157,12 +154,10 @@ function getAccuracyWinner(benchmarks: ModelBenchmark[]): "yolo" | "cnn" | "tie"
 
 export async function compareFromURL(
   url: string,
-  confidenceThreshold: number = 0.25,
   potholeOnly: boolean = false
 ): Promise<ModelComparisonResult> {
   const request: URLRequest = {
     url,
-    confidence_threshold: confidenceThreshold,
     pothole_only: potholeOnly,
   };
 
@@ -175,7 +170,7 @@ export async function compareFromURL(
     // Backward-compatible fallback when compare endpoint is not available.
     if (error instanceof Error && error.message.includes("404")) {
       const [yolo_result, cnn_result] = await Promise.all([
-        detectFromURL(url, confidenceThreshold, potholeOnly),
+        detectFromURL(url, potholeOnly),
         classifyFromURL(url, 0.5),
       ]);
       return buildClientSideComparison(yolo_result, cnn_result);
@@ -186,13 +181,12 @@ export async function compareFromURL(
 
 export async function compareFromUpload(
   file: File,
-  confidenceThreshold: number = 0.25,
   potholeOnly: boolean = false
 ): Promise<ModelComparisonResult> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const endpoint = `${API_BASE_URL}/api/v1/compare/upload?confidence_threshold=${confidenceThreshold}&pothole_only=${potholeOnly}`;
+  const endpoint = `${API_BASE_URL}/api/v1/compare/upload?pothole_only=${potholeOnly}`;
   const response = await fetch(endpoint, {
     method: "POST",
     body: formData,
@@ -209,7 +203,7 @@ export async function compareFromUpload(
   // Backward-compatible fallback when compare endpoint is not available.
   if (response.status === 404) {
     const [yolo_result, cnn_result] = await Promise.all([
-      detectFromUpload(file, confidenceThreshold, potholeOnly),
+      detectFromUpload(file, potholeOnly),
       classifyFromUpload(file, 0.5),
     ]);
     return buildClientSideComparison(yolo_result, cnn_result);
@@ -249,7 +243,7 @@ export function getDamageClassColor(className: string): string {
       return "bg-red-500";
     case "crack":
       return "bg-orange-500";
-    case "manhole":
+    case "normal":
       return "bg-green-500";
     default:
       return "bg-gray-500";
@@ -262,7 +256,7 @@ export function getDamageClassBorder(className: string): string {
       return "border-red-500";
     case "crack":
       return "border-orange-500";
-    case "manhole":
+    case "normal":
       return "border-green-500";
     default:
       return "border-gray-500";
@@ -275,8 +269,8 @@ export function getDamageClassIcon(className: string): string {
       return "🕳️";
     case "crack":
       return "⚡";
-    case "manhole":
-      return "🔵";
+    case "normal":
+      return "✅";
     default:
       return "❓";
   }

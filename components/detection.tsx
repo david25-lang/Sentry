@@ -10,7 +10,6 @@ import {
   ImageIcon,
   ZapIcon,
   Target01Icon,
-  TimeScheduleIcon,
   CheckmarkCircle01Icon,
   AlertCircleIcon,
   Delete01Icon,
@@ -31,7 +30,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,7 +42,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -65,7 +62,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSentryStore } from "@/lib/store";
-import { formatProcessingTime, getDamageClassIcon, getConfidenceColor, getDamageClassColor, getDamageClassBorder } from "@/lib/api";
+import { formatProcessingTime, getDamageClassIcon, getConfidenceColor } from "@/lib/api";
 import { Switch } from "@/components/ui/switch";
 
 export function Detection() {
@@ -86,7 +83,6 @@ export function Detection() {
   const [inputMode, setInputMode] = useState<"url" | "upload" | "camera">("upload");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
 
   const handleUrlSubmit = async (e: React.FormEvent) => {
@@ -196,7 +192,7 @@ export function Detection() {
       const colorMap: Record<string, string> = {
         pothole: '#ef4444',
         crack: '#f97316',
-        manhole: '#22c55e',
+        normal: '#22c55e',
       };
 
       lastDetectionResult.detections.forEach((d, i) => {
@@ -245,7 +241,7 @@ export function Detection() {
             YOLO Detection
           </h1>
           <p className="text-muted-foreground mt-1">
-            Real-time pothole, crack & manhole detection with bounding boxes
+            Real-time pothole, crack & normal detection with bounding boxes
           </p>
         </div>
         <div className="flex gap-2">
@@ -380,7 +376,7 @@ export function Detection() {
                         Stop Camera
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground">Use your device camera to capture a road image. The model will detect potholes, cracks, and manholes.</p>
+                    <p className="text-xs text-muted-foreground">Use your device camera to capture a road image. The model will detect potholes, cracks, and normal pavement.</p>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -394,23 +390,20 @@ export function Detection() {
               <CardDescription>Adjust detection parameters</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label>Confidence Threshold</Label>
-                  <Badge variant="secondary">{(settings.confidenceThreshold * 100).toFixed(0)}%</Badge>
+                <div className="rounded-lg border bg-muted/30 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Label>Confidence Threshold</Label>
+                    <Badge variant="secondary">
+                      {lastDetectionResult?.applied_confidence_threshold != null
+                        ? `${(lastDetectionResult.applied_confidence_threshold * 100).toFixed(0)}% auto`
+                        : "Auto"}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    The system chooses this automatically per image using YOLO confidence distribution.
+                    Each box still shows its own confidence score.
+                  </p>
                 </div>
-                <Slider
-                  value={[settings.confidenceThreshold * 100]}
-                  onValueChange={([v]) => updateSettings({ confidenceThreshold: v / 100 })}
-                  max={100}
-                  min={10}
-                  step={5}
-                  className="w-full"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Higher threshold = fewer but more confident detections
-                </p>
-              </div>
               <div className="flex items-center justify-between mt-4">
                 <Label className="mb-0">Pothole only</Label>
                 <Switch
@@ -432,7 +425,7 @@ export function Detection() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-sm bg-green-500" />
-                  <span className="text-xs">Manhole</span>
+                    <span className="text-xs">Normal</span>
                 </div>
               </div>
             </CardContent>
@@ -528,7 +521,7 @@ export function Detection() {
                     const colorHex: Record<string, string> = {
                       pothole: '#ef4444',
                       crack: '#f97316',
-                      manhole: '#22c55e',
+                      normal: '#22c55e',
                     };
                     const borderColor = colorHex[detection.class_name] || '#6b7280';
                     return (

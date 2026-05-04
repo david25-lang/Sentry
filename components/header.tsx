@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Shield01Icon,
@@ -11,19 +10,8 @@ import {
   GitCompareIcon,
   Settings01Icon,
   Menu01Icon,
-  RefreshIcon,
-  CheckmarkCircle01Icon,
-  CancelCircleIcon,
-  InformationCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   Sheet,
   SheetContent,
@@ -44,200 +32,101 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     id: "home",
-    label: "Dashboard",
+    label: "Home",
     icon: () => <HugeiconsIcon icon={Home01Icon} strokeWidth={2} />,
-    description: "Overview and quick actions",
+    description: "Overview",
   },
   {
     id: "detect",
-    label: "Detection",
+    label: "Detect",
     icon: () => <HugeiconsIcon icon={Camera01Icon} strokeWidth={2} />,
-    description: "YOLO object detection",
+    description: "YOLO analysis",
   },
   {
     id: "classify",
-    label: "CNN",
+    label: "Classify",
     icon: () => <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={2} />,
-    description: "CNN image classification",
+    description: "CNN classification",
   },
   {
     id: "compare",
     label: "Compare",
     icon: () => <HugeiconsIcon icon={GitCompareIcon} strokeWidth={2} />,
-    description: "YOLO vs CNN benchmark comparison",
+    description: "Model comparison",
   },
   {
     id: "settings",
     label: "Settings",
     icon: () => <HugeiconsIcon icon={Settings01Icon} strokeWidth={2} />,
-    description: "Configure analysis settings",
+    description: "Preferences",
   },
 ];
 
 export function Header() {
-  const { 
-    activeTab, 
-    setActiveTab, 
-    health, 
-    fetchHealth,
-    isLoading 
-  } = useSentryStore();
-
-  useEffect(() => {
-    fetchHealth();
-    // Refresh health every 30 seconds
-    const interval = setInterval(fetchHealth, 30000);
-    return () => clearInterval(interval);
-  }, [fetchHealth]);
-
-  const isConnected = health?.status === "healthy";
+  const { activeTab, setActiveTab } = useSentryStore();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
-        {/* Logo & Brand */}
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#050203]/90 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary text-primary-foreground">
-            <HugeiconsIcon icon={Shield01Icon} strokeWidth={2} className="w-6 h-6" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/15 text-orange-400 ring-1 ring-orange-500/30">
+            <HugeiconsIcon icon={Shield01Icon} strokeWidth={2} className="h-5 w-5" />
           </div>
-          <div className="hidden md:block">
-            <h1 className="text-xl font-bold tracking-tight">Sentry</h1>
-            <p className="text-xs text-muted-foreground">Road Damage Detection</p>
+          <div>
+            <h1 className="text-base font-semibold tracking-tight text-white">Sentry</h1>
+            <p className="text-xs text-zinc-400">Road Damage Detection</p>
           </div>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
-          <TooltipProvider>
-            {navItems.map((item) => (
-              <Tooltip key={item.id}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={activeTab === item.id ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setActiveTab(item.id)}
-                    className="gap-2"
-                  >
-                    <item.icon />
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{item.description}</p>
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </TooltipProvider>
+        <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1 md:flex">
+          {navItems.map((item) => (
+            <Button
+              key={item.id}
+              variant={activeTab === item.id ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveTab(item.id)}
+              className={`rounded-full px-4 ${activeTab === item.id ? "bg-white text-black hover:bg-white/90" : "text-zinc-200 hover:bg-white/10 hover:text-white"}`}
+            >
+              {item.label}
+            </Button>
+          ))}
         </nav>
 
-        {/* Status & Actions */}
-        <div className="flex items-center gap-3">
-          {/* API Status Badge */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge 
-                  variant={isConnected ? "default" : "destructive"}
-                  className="gap-1.5 cursor-pointer"
-                  onClick={() => fetchHealth()}
-                >
-                  <HugeiconsIcon 
-                    icon={isConnected ? CheckmarkCircle01Icon : CancelCircleIcon} 
-                    strokeWidth={2}
-                    className="w-3.5 h-3.5" 
-                  />
-                  <span className="hidden sm:inline">
-                    {isLoading ? "Checking..." : isConnected ? "Connected" : "Disconnected"}
-                  </span>
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="space-y-1">
-                  <p className="font-medium">API Status</p>
-                  {health ? (
-                    <>
-                      <p className="text-xs">Version: {health.version}</p>
-                      <p className="text-xs">Device: {health.device}</p>
-                      <p className="text-xs">Model: {health.model_loaded ? "✅ Loaded" : "❌ Not loaded"}</p>
-                      <p className="text-xs">Classes: {health.model_classes.join(", ")}</p>
-                    </>
-                  ) : (
-                    <p className="text-xs text-muted-foreground">Click to refresh</p>
-                  )}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <div className="flex items-center gap-2">
+          <Button className="rounded-full border border-orange-500/40 bg-orange-500/10 text-orange-100 shadow-[0_0_24px_rgba(249,115,22,0.25)] hover:bg-orange-500/20">
+            Get Started
+          </Button>
 
-          {/* Refresh Button */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  onClick={() => fetchHealth()}
-                  disabled={isLoading}
-                >
-                  <HugeiconsIcon 
-                    icon={RefreshIcon} 
-                    strokeWidth={2}
-                    className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} 
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Refresh connection</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="outline" size="icon">
-                <HugeiconsIcon icon={Menu01Icon} strokeWidth={2} className="w-5 h-5" />
+              <Button variant="outline" size="icon" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                <HugeiconsIcon icon={Menu01Icon} strokeWidth={2} className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
+            <SheetContent side="right" className="border-white/10 bg-[#0b0705] text-white">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <HugeiconsIcon icon={Shield01Icon} strokeWidth={2} className="w-5 h-5 text-primary" />
+                <SheetTitle className="flex items-center gap-2 text-white">
+                  <HugeiconsIcon icon={Shield01Icon} strokeWidth={2} className="h-5 w-5 text-orange-400" />
                   Sentry Navigation
                 </SheetTitle>
               </SheetHeader>
-              <Separator className="my-4" />
+              <Separator className="my-4 bg-white/10" />
               <nav className="flex flex-col gap-2">
                 {navItems.map((item) => (
                   <Button
                     key={item.id}
                     variant={activeTab === item.id ? "default" : "ghost"}
-                    className="justify-start gap-3"
+                    className={`justify-start gap-3 rounded-xl ${activeTab === item.id ? "bg-white text-black" : "text-zinc-200 hover:bg-white/10 hover:text-white"}`}
                     onClick={() => setActiveTab(item.id)}
                   >
                     <item.icon />
                     <div className="text-left">
                       <p className="font-medium">{item.label}</p>
-                      <p className="text-xs text-muted-foreground">{item.description}</p>
+                      <p className="text-xs text-zinc-400">{item.description}</p>
                     </div>
                   </Button>
                 ))}
               </nav>
-              <Separator className="my-4" />
-              <div className="rounded-lg border p-4 bg-muted/50">
-                <div className="flex items-center gap-2 mb-2">
-                  <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={2} className="w-4 h-4 text-primary" />
-                  <span className="font-medium text-sm">API Info</span>
-                </div>
-                {health ? (
-                  <div className="text-xs space-y-1 text-muted-foreground">
-                    <p>Status: {health.status}</p>
-                    <p>Version: {health.version}</p>
-                    <p>Model: {health.model_loaded ? "Loaded" : "Not loaded"}</p>
-                    <p>Device: {health.device}</p>
-                  </div>
-                ) : (
-                  <p className="text-xs text-muted-foreground">Not connected</p>
-                )}
-              </div>
             </SheetContent>
           </Sheet>
         </div>

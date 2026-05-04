@@ -9,7 +9,6 @@ import {
   LinkIcon,
   ImageIcon,
   ZapIcon,
-  TimeScheduleIcon,
   CheckmarkCircle01Icon,
   AlertCircleIcon,
   Delete01Icon,
@@ -52,11 +51,6 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { useSentryStore } from "@/lib/store";
 import { formatProcessingTime, getDamageClassIcon, getConfidenceColor } from "@/lib/api";
 
@@ -149,7 +143,7 @@ export function Classification() {
         <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={2} className="h-4 w-4" />
         <AlertTitle>About CNN Classification</AlertTitle>
         <AlertDescription>
-          CNN classification analyzes the entire image and assigns a single damage class. 
+          CNN classification analyzes the entire image and assigns a single damage class from pothole, crack, or normal. 
           Unlike YOLO detection, it doesn&apos;t provide bounding boxes but is faster (~5ms vs ~27ms).
         </AlertDescription>
       </Alert>
@@ -409,7 +403,7 @@ export function Classification() {
                     <p className="text-muted-foreground mb-4">
                       {primaryDetection.class_name === "pothole" && "A hole or depression in the road surface"}
                       {primaryDetection.class_name === "crack" && "Linear fractures or breaks in the pavement"}
-                      {primaryDetection.class_name === "manhole" && "Utility access cover detected in the roadway"}
+                      {primaryDetection.class_name === "normal" && "No visible road damage detected"}
                     </p>
                     
                     {/* Confidence Meter */}

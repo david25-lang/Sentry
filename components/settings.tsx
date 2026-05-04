@@ -8,7 +8,6 @@ import {
   CheckmarkCircle01Icon,
   InformationCircleIcon,
   Target01Icon,
-  SlidersHorizontalIcon,
   PaintBrushIcon,
   DatabaseIcon,
   Delete01Icon,
@@ -26,11 +25,9 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -38,17 +35,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -67,16 +53,11 @@ export function Settings() {
     detectionHistory,
     clearHistory,
     health,
-    models,
     fetchHealth,
     fetchModels,
   } = useSentryStore();
 
   const [clearDialogOpen, setClearDialogOpen] = React.useState(false);
-
-  const handleConfidenceChange = (value: number[]) => {
-    updateSettings({ confidenceThreshold: value[0] });
-  };
 
   const handleThemeChange = (value: string) => {
     updateSettings({ theme: value as "light" | "dark" | "system" });
@@ -162,39 +143,14 @@ export function Settings() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Confidence Threshold */}
-            <div className="space-y-4">
+            <div className="space-y-4 rounded-lg border bg-muted/30 p-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="confidence" className="flex items-center gap-2">
-                  Confidence Threshold
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={2} className="w-4 h-4 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="max-w-xs">
-                          Minimum confidence level required for a detection to be reported.
-                          Higher values reduce false positives but may miss some damage.
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </Label>
-                <span className="text-sm font-medium">{(settings.confidenceThreshold * 100).toFixed(0)}%</span>
+                <Label className="flex items-center gap-2">Confidence Threshold</Label>
+                <Badge variant="secondary">Auto</Badge>
               </div>
-              <Slider
-                id="confidence"
-                min={0.1}
-                max={0.95}
-                step={0.05}
-                value={[settings.confidenceThreshold]}
-                onValueChange={handleConfidenceChange}
-                className="w-full"
-              />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>More detections</span>
-                <span>More accurate</span>
-              </div>
+              <p className="text-xs text-muted-foreground">
+                YOLO now chooses threshold automatically for each image and reports per-detection confidence so you can see how sure it is.
+              </p>
             </div>
 
             <Separator />
@@ -268,6 +224,10 @@ export function Settings() {
                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
                   <div className="w-4 h-4 rounded-full bg-orange-500" />
                   <span className="text-sm">Crack</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500" />
+                  <span className="text-sm">Normal</span>
                 </div>
               </div>
             </div>

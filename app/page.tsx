@@ -38,29 +38,11 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-transparent">
       <Header />
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {renderContent()}
       </main>
-      
-      {/* Footer */}
-      <footer className="border-t mt-auto">
-        <div className="container mx-auto px-4 py-6 max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-foreground">Sentry</span>
-              <span>•</span>
-              <span>Road Damage Detection System</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <span>Final Year Project</span>
-              <span>•</span>
-              <span>Built with Next.js & FastAPI</span>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 // Types for Sentry Road Damage Detection API
 // ============================================
 
-// Damage class types — 3-class YOLO model
-export type DamageClass = "pothole" | "crack" | "manhole";
+// Damage class types — 3-class road damage model
+export type DamageClass = "pothole" | "crack" | "normal";
 
 // Bounding box for YOLO detection
 export interface BoundingBox {
@@ -36,6 +36,7 @@ export interface ImageAnalysisResult {
   detections: Detection[];
   primary_class: DamageClass | null;
   total_detections: number;
+  applied_confidence_threshold?: number | null;
   timestamp: string;
 }
 
@@ -109,7 +110,6 @@ export interface ErrorResponse {
 
 // Analysis settings
 export interface AnalysisSettings {
-  confidenceThreshold: number;
   showBoundingBoxes: boolean;
   potholeOnly: boolean;
   autoSaveResults: boolean;

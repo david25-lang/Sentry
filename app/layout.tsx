@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Sentry — Road Damage Detection",
-  description: "AI-powered pothole and crack detection using YOLOv8",
+  description: "AI-powered road damage detection and CNN classification using YOLOv8 and ResNet18",
 };
 
 export default function RootLayout({
@@ -25,9 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={jetbrainsMono.variable}>
+    <html lang="en" className={`${jetbrainsMono.variable} dark`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[#050203] text-zinc-100 antialiased`}
       >
         {children}
       </body>
