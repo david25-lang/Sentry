@@ -14,7 +14,7 @@ export function Footer() {
     <footer className="mt-16 border-t border-white/10 py-10 text-sm text-zinc-400">
       <div className="grid gap-8 lg:grid-cols-3">
         <div>
-          <p className="text-white">Sentry AI</p>
+          <p className="text-white">Sentry</p>
           <p className="mt-2 text-xs text-zinc-500">
             Final Year Project — Pothole and Crack Detection System.
           </p>

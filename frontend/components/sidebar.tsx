@@ -19,21 +19,30 @@ const statusTone = (status?: string | null) => {
   return "bg-amber-500/15 text-amber-200 border-amber-500/30";
 };
 
-const statusIcon = (status?: string | null) => {
-  const value = (status || "unknown").toLowerCase();
-  if (value === "healthy" || value === "ok") {
-    return CheckCircle2;
+const statusValue = (status?: string | null) =>
+  (status || "unknown").toLowerCase();
+
+const isHealthyStatus = (status?: string | null) => {
+  const value = statusValue(status);
+  return value === "healthy" || value === "ok";
+};
+
+const isOfflineStatus = (status?: string | null) =>
+  statusValue(status) === "offline";
+
+const StatusIndicatorIcon = ({ status }: { status?: string | null }) => {
+  if (isHealthyStatus(status)) {
+    return <CheckCircle2 className="h-4 w-4" />;
   }
-  if (value === "offline") {
-    return AlertTriangle;
+  if (isOfflineStatus(status)) {
+    return <AlertTriangle className="h-4 w-4" />;
   }
-  return Activity;
+  return <Activity className="h-4 w-4" />;
 };
 
 export function Sidebar() {
   const pathname = usePathname();
   const { health } = useSentryStore();
-  const StatusIcon = statusIcon(health?.status);
 
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-72 flex-col border-r border-white/10 bg-slate-950/60 px-6 py-6 backdrop-blur-xl lg:flex">
@@ -88,7 +97,7 @@ export function Sidebar() {
 
       <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
         <div className="flex items-center gap-2 text-xs text-zinc-400">
-          <StatusIcon className="h-4 w-4" />
+          <StatusIndicatorIcon status={health?.status} />
           <span>System status</span>
         </div>
         <div className="mt-3 flex items-center justify-between">

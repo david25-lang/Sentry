@@ -9,7 +9,9 @@ interface SeverityGaugeProps {
   tone?: "low" | "medium" | "high" | "critical";
 }
 
-const toneColor: Record<SeverityGaugeProps["tone"], string> = {
+type SeverityTone = NonNullable<SeverityGaugeProps["tone"]>;
+
+const toneColor: Record<SeverityTone, string> = {
   low: "#22c55e",
   medium: "#f59e0b",
   high: "#f97316",

@@ -810,7 +810,7 @@ function normalizeCompareResponse(
   raw: Record<string, unknown>
 ): ModelComparisonResult {
   if ("yolo_result" in raw && "cnn_result" in raw) {
-    return raw as ModelComparisonResult;
+    return raw as unknown as ModelComparisonResult;
   }
 
   const payload =
@@ -840,7 +840,7 @@ function normalizeCompareResponse(
     };
   }
 
-  return raw as ModelComparisonResult;
+  return raw as unknown as ModelComparisonResult;
 }
 
 // ===== Model Information =====

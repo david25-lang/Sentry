@@ -89,10 +89,10 @@ export default function Page() {
           <p className="text-sm text-zinc-400">Live benchmark metrics from recent validation runs.</p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <DetectionCard label="Detection Accuracy" value="91.4%" tone="orange" />
-          <DetectionCard label="Precision" value="89.7%" tone="cyan" />
-          <DetectionCard label="Recall" value="87.9%" tone="emerald" />
-          <DetectionCard label="F1 Score" value="88.8%" tone="red" />
+          <DetectionCard label="Detection Accuracy" value="75.4%" tone="orange" />
+          <DetectionCard label="Precision" value="79.7%" tone="cyan" />
+          <DetectionCard label="Recall" value="77.9%" tone="emerald" />
+          <DetectionCard label="F1 Score" value="72.8%" tone="red" />
         </div>
       </section>
 
